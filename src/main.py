@@ -1,7 +1,15 @@
 import numpy as np
 import csvutils as csv
 import utils
+import keys
+import log
 
+def correlation(dataMap, featureIDs, maskValues = []):
+         dataArray = csv.generateArray(dataMap, featureIDs)
+         mask = csv.generateDataMask(dataArray, maskValues)
+         maskedArray = np.ma.masked_array(dataArray, mask)
+         return np.ma.corrcoef(maskedArray)
+         
 def main():
         #retrieve raw data
         path = '/home/orcudy/Desktop/cs170a/data/CSV.csv'
@@ -28,26 +36,24 @@ def main():
         intConversionUnit = (ints, lambda x: int(x) if x.isdigit() else -1)
         responseMap = csv.convertType( csv.generateDataMap(lines, questionIDs), [floatConversionUnit, intConversionUnit])
         
-        demographicKeys = ['sex',
-                            'marital',
-                            'par',
-                            'ql1',
-                            'smart1',
-                            'age',
-                            'hh1',
-                            'live2',
-                            'educ2',
-                            'emplnw',
-                            'hisp',
-                            'birth_hisp',
-                            'race',
-                            'inc',
-                            'zipcode']
+        government = csv.generateArray(responseMap, keys.government)
         
-        demographics = csv.generateArray(responseMap, demographicKeys)
+        demographic = csv.generateArray(responseMap, keys.demographic + keys.government)
+        phone = csv.generateArray(responseMap, keys.phone)
+        quality = csv.generateArray(responseMap, keys.quality)
+        control = csv.generateArray(responseMap, keys.control)
+        internet = csv.generateArray(responseMap, keys.internet)
+        social = csv.generateArray(responseMap, keys.social)
+        exclusion = csv.generateArray(responseMap, keys.exclusion)
+
+        
+        #mask "Don't know" and "Refused" responses
+        maskValues = [-1, 8, 9, 98, 99, 998, 999, 9998, 9999, 99999]
         np.set_printoptions(threshold=np.nan)
-        print demographics.shape
-        print demographics
+        corr = correlation(responseMap, keys.government + keys.demographic, maskValues)
+
+        log.printArray(corr, '\t')
+
 
 
         

@@ -27,6 +27,20 @@ def generateDataMap(lines, featureIDs):
 			        dataMap[key].append(response)
         return dataMap
 
+def generateDataMask(dataMap, maskValues):
+        x = dataMap.shape[0]
+        y = dataMap.shape[1]
+        dataMask = []
+        for xindex in range(x):
+                maskLine = []
+                for yindex in range(y):
+                        if dataMap[xindex][yindex] in maskValues:
+                                maskLine.append(True)
+                        else:
+                                maskLine.append(False)
+                dataMask.append(maskLine)
+        return np.array(dataMask)
+
 #convert responses to appropriate type
 def convertType(dataMap, conversionUnits):
         for unit in conversionUnits:

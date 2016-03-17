@@ -1,5 +1,5 @@
 import numpy as np
-import csvutils as csv
+import csvutils
 import matplotlib.pyplot as plt
 
 def removeWhitespace(lines):
@@ -12,41 +12,62 @@ def removeWhitespace(lines):
         if newLine:
             newLines.append(newLine)
     return newLines
-            
 
-path = '/home/orcudy/Desktop/cs170a/data/Iris-small.csv'
-fd = open(path, 'r')
-rawLines = list(fd)
-fd.close()
+def svd(array):
+    cov = np.cov(array)
+    return np.linalg.svd(cov)
+    
+def convertToCSV(dataArray, path, topCellIDs = [], leftCellIDs = []):
+    fd = open(path, 'w')
 
-lines = removeWhitespace(rawLines)
+    #write top cell labels
+    for ID in topCellIDs:
+        fd.write(ID + ',')
+    fd.write('\n')
 
-featureIDMap = csv.generateQuestionIDMap(lines)
-rawFeatureMap = csv.generateResponseMap(lines, featureIDMap)
-featureNames = ['SepalLength', 'Sepal.Width', 'Petal.Length', 'Petal.Width', 'Species']
-conversionUnit = [(featureNames, lambda x: float(x))]
-featureMap = csv.convertTypes(rawFeatureMap, conversionUnit)
-featureArray = csv.generateArray(featureMap, featureNames)
+    
+    xdim, ydim = dataArray.shape
+    for x in range(xdim):
+        if x < len(leftCellIDs):
+            fd.write(leftCellIDs[x] + ',')
+        for y in range(ydim):
+            fd.write("%.5f" % dataArray[x][y] + ',')
+        fd.write('\n')
+    fd.close()    
+    
+    
 
-#corr = np.corrcoef(featureArray)
-cov = np.cov(featureArray)
-u, s, vT = np.linalg.svd(cov)
-print s
-print u
+def main():
+    path = '/home/orcudy/Desktop/cs170a/data/Iris-small.csv'
+    fd = open(path, 'r')
+    rawLines = list(fd)
+    fd.close()
 
-'''
-pc1 = u[:,0]
-pc2 = u[:,1]
-x = np.dot(featureArray.T[0:50], pc1)
-y = np.dot(featureArray.T[0:50], pc2) 
-plt.plot(x,y, 'r+')
+    lines = removeWhitespace(rawLines)
 
-x = np.dot(featureArray.T[50:100], pc1)
-y = np.dot(featureArray.T[50:100], pc2) 
-plt.plot(x,y, 'g+')
+    featureIDs = csvutils.generateFeatureIDList(lines, ',')
+    conversionUnit = [(featureIDs, lambda x: float(x))]
+    
+    rawFeatureMap = csvutils.generateDataMap(lines, featureIDs)
+    featureMap = csvutils.convertType(rawFeatureMap, conversionUnit)
+    featureArray = csvutils.generateArray(featureMap, featureIDs)
 
-x = np.dot(featureArray.T[100:150], pc1)
-y = np.dot(featureArray.T[100:150], pc2) 
-plt.plot(x,y, 'b+')
-plt.show()
-'''
+    maskValues = []
+    mask = csvutils.generateDataMask(featureArray, maskValues)
+    maskedArray = np.ma.masked_array(featureArray, mask)
+    cov = np.ma.cov(maskedArray)
+    logpath = '/home/orcudy/Desktop/cs170a/logs/iris_cov.csv'
+    convertToCSV(cov, logpath, [' '] + featureIDs, featureIDs)
+
+    corr = np.ma.corrcoef(maskedArray)
+    logpath = '/home/orcudy/Desktop/cs170a/logs/iris_corr.csv'
+    convertToCSV(corr, logpath, [' '] + featureIDs, featureIDs)
+
+    u, s, vt = np.linalg.svd(cov)
+    logpath = '/home/orcudy/Desktop/cs170a/logs/iris_svd.csv'
+    convertToCSV(u, logpath, ['eigenvalues'], featureIDs)
+
+    
+main()
+
+

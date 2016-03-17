@@ -14,7 +14,7 @@ def removeWhitespace(lines):
     return newLines
             
 
-path = '/home/orcudy/Desktop/cs170a/Iris.csv'
+path = '/home/orcudy/Desktop/cs170a/data/Iris-small.csv'
 fd = open(path, 'r')
 rawLines = list(fd)
 fd.close()
@@ -26,14 +26,14 @@ rawFeatureMap = csv.generateResponseMap(lines, featureIDMap)
 featureNames = ['SepalLength', 'Sepal.Width', 'Petal.Length', 'Petal.Width', 'Species']
 conversionUnit = [(featureNames, lambda x: float(x))]
 featureMap = csv.convertTypes(rawFeatureMap, conversionUnit)
-featureArray = csv.generateArray(featureMap, featureNames).T
-print featureArray
+featureArray = csv.generateArray(featureMap, featureNames)
 
 #corr = np.corrcoef(featureArray)
 cov = np.cov(featureArray)
 u, s, vT = np.linalg.svd(cov)
 print s
 print u
+
 '''
 pc1 = u[:,0]
 pc2 = u[:,1]

@@ -1,0 +1,47 @@
+Q5 Recently, a government program with the aim of collecting information about people’s telephone calls, emails and other online communications has been in the news. How interested are you, if at all, in this topic?
+
+1 Very interested
+2 Somewhat interested
+3 Not too interested (OR)
+4 Not interested at all
+
+Q6 Overall, how KNOWLEDGEABLE would you say you are about the debate surrounding these government programs aimed at collecting information about people’s calls, emails and other online communications? Would you say you are...
+1 Very knowledgeable
+2 Somewhat knowledgeable
+3 Not too knowledgeable (OR)
+4 Not knowledgeable at all
+
+Q7 How much information, if any, have you gotten about this debate from the following sources? Have you gotten a lot, some, a little, or no information about this debate from...
+a. Your local print newspaper
+b. TV and radio
+c. Friends and family
+d. Facebook
+e. Twitter
+f. Online news sources other than Facebook or Twitter
+
+1 A lot
+2 Some
+3 A little
+4 None at all
+
+
+Q8 Thinking about the debate over the U.S. government's surveillance programs... Do you FAVOR or OPPOSE a government program to collect nearly all communications in the U.S. as part of anti-terrorism efforts? Do you strongly (favor/oppose) or only somewhat (favor/oppose) these programs?
+1 Strongly favor
+2 Somewhat favor
+3 Somewhat oppose
+4 Strongly oppose
+
+
+Q9 If the topic of the government’s surveillance programs came up [INSERT FIRST ITEM; RANDOMIZE], would you be very willing, somewhat willing, somewhat UNwilling, or very UNwilling to join in the conversation?
+What if this topic came up... Would you be very willing, somewhat willing, somewhat UNwilling, or very UNwilling to join in the conversation?
+a. At a community meeting
+b. At work
+c. At a restaurant with friends
+d. At a family dinner
+e. On Facebook
+f. On Twitter
+
+1 Very willing
+2 Somewhat willing
+3 Somewhat unwilling
+4 Very unwilling

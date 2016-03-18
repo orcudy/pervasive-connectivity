@@ -12,8 +12,8 @@ demographic = [
     'live2',
     'educ2',
     'emplnw',
-    'hisp',
-    'birth_hisp',
+    #'hisp',
+    #'birth_hisp',
     'race',
     'inc',
     'zipcode'
@@ -36,7 +36,7 @@ phone = [
     'txtavg5'
 ]
 
-quality = [ 'q1' ]
+quality = ['q1']
 
 control = [
     'q2a',
@@ -117,6 +117,8 @@ social = [
     'q4l'
 ]
 
+position = ['q8']
+
 government = [
     'q5',
     'q6',
@@ -141,6 +143,7 @@ government = [
     'q10f',
     'q10g'
 ]
+
 
 exclusion = [
     'q11a',

@@ -27,6 +27,9 @@ def generateDataMap(lines, featureIDs):
 			        dataMap[key].append(response)
         return dataMap
 
+#input: 2D data array, values which should be masked
+#output: boolean array with same shape as input array, where True
+#        signifies value should be masked
 def generateDataMask(dataMap, maskValues):
         x = dataMap.shape[0]
         y = dataMap.shape[1]
@@ -66,3 +69,26 @@ def countResponses(responseList):
                 else:
                         countMap[entry] = (countMap[entry][0], countMap[entry][1] + 1)
                 return map(lambda x: countMap[x], countMap.keys())
+    
+def writeToCSV(dataArray, path, topCellIDs = [], leftCellIDs = []):
+    fd = open(path, 'w')
+
+    #write top cell labels
+    for ID in topCellIDs:
+        fd.write(ID + ',')
+    fd.write('\n')
+  
+    xdim, ydim = dataArray.shape
+    for x in range(xdim):
+        if x < len(leftCellIDs):
+            fd.write(leftCellIDs[x] + ',')
+        for y in range(ydim):
+            fd.write("%.5f" % dataArray[x][y] + ',')
+        fd.write('\n')
+    fd.close()    
+    
+    
+
+
+
+

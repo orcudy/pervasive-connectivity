@@ -61,15 +61,11 @@ def generateArray(dataMap, featureIDs):
                 newMap[index] = dataMap[featureIDs[index]]
         return newMap
 
-def countResponses(responseList):
-        countMap = {}
-        for entry in responseList:
-                if entry not in countMap:
-                        countMap[entry] = (entry, 1)
-                else:
-                        countMap[entry] = (countMap[entry][0], countMap[entry][1] + 1)
-                return map(lambda x: countMap[x], countMap.keys())
-    
+def generateMaskedArray(dataMap, keys, maskValues):
+        data = generateArray(dataMap, keys)
+        mask = generateDataMask(data, maskValues)
+        return np.ma.masked_array(data, mask)
+
 def writeToCSV(dataArray, path, topCellIDs = [], leftCellIDs = []):
     fd = open(path, 'w')
 
@@ -86,9 +82,4 @@ def writeToCSV(dataArray, path, topCellIDs = [], leftCellIDs = []):
             fd.write("%.5f" % dataArray[x][y] + ',')
         fd.write('\n')
     fd.close()    
-    
-    
-
-
-
-
+           

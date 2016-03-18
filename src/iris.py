@@ -1,52 +1,51 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import csvutils as csv
-import matplotlib.pyplot as plt
+import utils
+import linalg
 
-def removeWhitespace(lines):
-    newLines = []
-    for line in lines:
-        newLine = ""
-        for char in line:
-            if char != '\n' and char != '\t':
-                newLine += char
-        if newLine:
-            newLines.append(newLine)
-    return newLines
+#projection onto first two principals components
+def renderIrisPCA(eigenvectors, data, species):
+        pc1 = eigenvectors[:,0]
+        pc2 = eigenvectors[:,1]
+        x = np.dot(data.T, pc1)
+        y = np.dot(data.T, pc2)
+        plt.plot(x[0:50], y[0:50], 'go', label='Setosa')
+        plt.plot(x[50:100], y[50:100], 'yo', label='Versicolor')
+        plt.plot(x[100:150], y[100:150], 'ro', label='Virginica')
+        plt.title('PCA on Iris Data Set')
+        plt.ylabel('Second Principal Component')
+        plt.xlabel('First Principal Component')
+        plt.legend(loc='upper left', numpoints=1)
+        plt.show()
 
-def svd(array):
-    cov = np.cov(array)
-    return np.linalg.svd(cov)
-    
 def main():
-    path = '/home/orcudy/Desktop/cs170a/data/Iris-small.csv'
-    fd = open(path, 'r')
-    rawLines = list(fd)
-    fd.close()
+        #get file handle
+        path = '/home/orcudy/Desktop/cs170a/data/Iris.csv'
+        fd = open(path, 'r')
+        lines = list(fd)
+        fd.close()
 
-    lines = removeWhitespace(rawLines)
+        #retrieve flower data
+        featureIDs = csv.generateFeatureIDList(lines, ',')
 
-    featureIDs = csv.generateFeatureIDList(lines, ',')
-    conversionUnit = [(featureIDs, lambda x: float(x))]
-    
-    rawFeatureMap = csv.generateDataMap(lines, featureIDs)
-    featureMap = csv.convertType(rawFeatureMap, conversionUnit)
-    featureArray = csv.generateArray(featureMap, featureIDs)
+        #remove whitespace from IDs
+        for index in range(len(featureIDs)):
+                featureIDs[index] = filter(lambda x: x.isalnum(), featureIDs[index])
+  
+        #generate feature map and convert to appropriate type
+        floatConversionUnit = (featureIDs, lambda x: float(x) if utils.isfloat(x) else -1.0)
+        dataMap = csv.convertType( csv.generateDataMap(lines, featureIDs), [floatConversionUnit])
+        
 
-    maskValues = []
-    mask = csv.generateDataMask(featureArray, maskValues)
-    maskedArray = np.ma.masked_array(featureArray, mask)
-    cov = np.ma.cov(maskedArray)
-    logpath = '/home/orcudy/Desktop/cs170a/logs/iris_cov.csv'
-    csv.writeToCSV(cov, logpath, [' '] + featureIDs, featureIDs)
-
-    corr = np.ma.corrcoef(maskedArray)
-    logpath = '/home/orcudy/Desktop/cs170a/logs/iris_corr.csv'
-    csv.writeToCSV(corr, logpath, [' '] + featureIDs, featureIDs)
-
-    u, s, vt = np.linalg.svd(cov)
-    logpath = '/home/orcudy/Desktop/cs170a/logs/iris_svd.csv'
-    csv.writeToCSV(u, logpath, ['eigenvalues'], featureIDs)
-
+        #set parameters for analysis
+        species = csv.generateArray(dataMap, ['Species']).T
+        basePath =  '/home/orcudy/Desktop/cs170a/logs'
+        ID = 'iris'
+        data = csv.generateArray(dataMap, featureIDs)
+        correlation = linalg.computeCorrelationMatrix(data, featureIDs, True, basePath, ID)
+        u, s, vt = linalg.computeSVD(correlation, True, basePath, ID)
+        renderIrisPCA(u, data, species)
+        
 main()
-
-
+		

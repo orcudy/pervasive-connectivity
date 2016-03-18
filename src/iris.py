@@ -44,7 +44,7 @@ def main():
         ID = 'iris'
         data = csv.generateArray(dataMap, featureIDs)
         correlation = linalg.computeCorrelationMatrix(data, featureIDs, True, basePath, ID)
-        u, s, vt = linalg.computeSVD(correlation, True, basePath, ID)
+        u, s, vt = linalg.computeSVD(correlation, featureIDs, True, basePath, ID)
         renderIrisPCA(u, data, species)
         
 main()

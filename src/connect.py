@@ -20,8 +20,8 @@ def renderPCA(eigenvectors, data, sentiments, title=''):
         def fullplot(hifavor, favor, opposed, hiopposed, title):
                 plt.plot(hifavor[0], hifavor[1], 'go', label='Highly In Favor')
                 plt.plot(favor[0], favor[1], 'yo', label='In Favor')
-                plt.plot(opposed[0], opposed[1], 'mo', label='Opposed')
-                plt.plot(hiopposed[0], hiopposed[1], 'ro', label='Highly Opposed')
+                plt.plot(opposed[0], opposed[1], 'ro', label='Opposed')
+                plt.plot(hiopposed[0], hiopposed[1], 'ko', label='Highly Opposed')
                 plt.title(title)
                 plt.ylabel('Second Principal Component')
                 plt.xlabel('First Principal Component')
@@ -55,15 +55,16 @@ def renderPCA(eigenvectors, data, sentiments, title=''):
         yopposed = map(lambda index: y[index], positionIndexMap[3])
         yhiopposed = map(lambda index: y[index], positionIndexMap[4])
 
+        fullplot((xhifavor, yhifavor),
+                (xfavor, yfavor),
+                (xopposed, yopposed),
+                 (xhiopposed, yhiopposed), title)
+        
         subplot((xhifavor, yhifavor),
                 (xfavor, yfavor),
                 (xopposed, yopposed),
                 (xhiopposed, yhiopposed))
 
-        fullplot((xhifavor, yhifavor),
-                (xfavor, yfavor),
-                (xopposed, yopposed),
-                 (xhiopposed, yhiopposed), title)
         
 def main():
         #get file handle
@@ -97,14 +98,14 @@ def main():
         basePath = '/home/orcudy/Desktop/cs170a/logs'
 
         #begin analysis
-        datakeys = [keys.phone, keys.control, keys.internet, keys.social, keys.exclusion]
-        IDs = ['PCA on Phone Category', 'PCA on Control Category', 'PCA on Internet category', 'PCA on Social Category', 'PCA on Exclusion Category']
+        datakeys = [keys.demographic, keys.phone, keys.control, keys.internet, keys.social, keys.government, keys.exclusion]
+        IDs = ['PCA on Demographic Category', 'PCA on Phone Category', 'PCA on Control Category', 'PCA on Internet category', 'PCA on Social Category', 'PCA on Government Category', 'PCA on Exclusion Category']
         for index in range(len(datakeys)):
                 key = datakeys[index]
                 ID =  IDs[index]
                 data = csv.generateMaskedArray(responseMap, key, maskValues)
                 correlation = linalg.computeCorrelationMatrix(data, keys=key, log=True, path=basePath, keyname=ID)
-                u, s, vt = linalg.computeSVD(correlation, log=True, path=basePath, keyname=ID)
+                u, s, vt = linalg.computeSVD(correlation, keys=key, log=True, path=basePath, keyname=ID)
                 renderPCA(u, data, position, ID)
 
 main()

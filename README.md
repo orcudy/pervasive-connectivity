@@ -9,14 +9,14 @@ In this paper, I investigate people's support of governmental surveillance progr
 * *Iris.csv*: Fisher's Iris dataset
 
 **images**
-* *graph*: all principal component comparison graphs 
-* *p1c*: tables containing first two eigenvectors of correlation matrix  
-* *src_images*: screenshots of source code for inclusion within report  
+* *graph*: all principal component analysis comparison graphs 
+* *pc*: tables containing first two eigenvectors of correlation matrix  
+* *src_images*: screenshots of source code  
 
 **src**
 * *connect.py*: main routine for Pervasive Connectivity analysis  
-* *iris.py*: main routne for Iris analysis  
+* *iris.py*: main routine for Iris analysis  
 * *keys.py*: lookup table for data categorization  
 * *csvutils.py*: library for manipulating csv data  
-* *linalg.py*: library logging results of linear algebra computation  
+* *linalg.py*: library for logging results of linear algebra computation  
 * *utils.py*: library for general utilities  
